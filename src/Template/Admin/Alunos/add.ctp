@@ -1,0 +1,44 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Aluno $aluno
+ */
+?>
+<div class="col-md-12">
+<nav class="form-inline">
+    <h5><?= __('Ações') ?></h5>
+    <div class="form-group mb-2">
+        <?= $this->Html->link(__('Listar Alunos'), ['action' => 'index'], ['class' => 'btn btn-primary btn-fill']) ?>
+    </div>
+    <div class="form-group mb-2">
+        <?= $this->Html->link(__('Listar Turmas'), ['controller' => 'Turmas', 'action' => 'index'], ['class' => 'btn btn-primary']) ?>
+    </div>
+</nav>
+<hr>
+<div class="form">
+    <?= $this->Form->create($aluno) ?>
+        <div class="form-group">
+            <h5><?= __('Adicionar Aluno') ?></h5>
+        </div>
+            <div class="form-group">
+                <?= $this->Form->control('nome', ['class' => 'form-control']) ?>
+            </div>
+            <div class="form-group">
+                <?= $this->Form->control('matricula', ['class' => 'form-control']) ?>
+            </div>
+            <div class="form-group">
+                <?= $this->Form->control('senha', ['class' => 'form-control']) ?>
+            </div>
+            <div class="form-group">
+                <?= $this->Form->control('turma_id', ['class' => 'form-control','options' => $turmas]) ?>
+            </div>
+            <div class="form-group">
+                <?= $this->Form->control('status', ['class' => 'form-control', 'type' => 'select', 'options' => ['Ativo' => 'Ativo', 'Desativo' => 'Desativo']]) ?>
+            </div>
+    <div class="form-group text-center">
+        <?= $this->Form->button(__('Submeter'), ['class' => 'btn btn-success btn-fill']) ?>
+        <?= $this->Html->link(__('Cancelar'), ['action' => 'index'], ['class' => 'btn btn-danger btn-fill']) ?>
+    </div>
+    <?= $this->Form->end() ?>
+</div>
+</div>
