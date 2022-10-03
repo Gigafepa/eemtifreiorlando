@@ -16,4 +16,10 @@
             $eletivas = $eletivasTable->find()->contain(['Inscricoes' => ['Alunos' => ['Turmas'], 'sort' => ['Alunos.nome' => 'ASC']]])->innerJoinWith('Inscricoes')->where(['Eletivas.id' => $id])->firstOrFail();
             $this->set(compact('eletiva', 'eletivas'));
         }
+        function incricoesAluno($id = null) {
+            $eletivasTable = TableRegistry::getTableLocator()->get('Alunos');
+            $aluno = $eletivasTable->find()->contain('Turmas')->where(['Alunos.id' => $id])->firstOrFail();
+            $eletivas = $eletivasTable->find()->contain(['Inscricoes' => ['Eletivas' => ['Professores']]])->innerJoinWith('Inscricoes')->where(['Alunos.id' => $id])->firstOrFail();
+            $this->set(compact('aluno', 'eletivas'));
+        }
     }
