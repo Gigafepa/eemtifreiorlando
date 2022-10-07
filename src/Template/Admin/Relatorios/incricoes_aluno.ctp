@@ -24,37 +24,25 @@
         <section>
             <table>
                 <tr>
-                    <td rowspan="2" width="14%">
-                        <?= $this->Html->image('logo-ceara.png', ['height' => '100%']) ?>
+                    <td rowspan="2" width="65%" style="text-align: center;">
+                        <?= $this->Html->image('pdf.png') ?>
                     </td>
-                    <td style="font-size: 70pt">
-                        <center >
-                        <strong>ESCOLA DE ENSINO MÉDIO EM TEMPO INTEGRAL CAPELÃO FREI ORLANDO
-                        </strong></center>
-                    </td>
-                    <td rowspan="2" width="16%" style="text-align:right">
-                        <?= $this->Html->image('logo-escola-2.jpeg', ['height' => '100%']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-size:70pt">
-                        <center>Endereço: Paulino Barroso, 1289 Imaculada Conceição Tel.85-33436814 Canindé/Ceará Código MEC: 23264640</center>
-                    </td>
+                  
                 </tr>
             </table>
             <br/>
-            <table width="100%">
+            <br>
+            <table width="100%" style="font-size: 14px;">
                 <tr>
-                    <td colspan="2" style="font-weight:bold">RELAÇÃO DOS ALUNOS DA ELETIVA: <?= $eletivas->titulo ?></td>
+                    <td colspan="2" style="font-weight:bold">TURMA: <?= $aluno->turma->full_name ?></td>
                 </tr>
                 <tr>
-                    <td style="font-weight:bold">PROFESSOR(A): <?= $aluno -> nome ?></td>
+                    <td style="font-weight:bold">ALUNO(A): <?= $aluno -> nome ?></td>
 
                     
                 </tr>
             </table>
             <div>
-                /*Criando professor id no banco de dados*/
                 <table class="table">
                     <colgroup>
                         <col width="28"/>
@@ -67,7 +55,13 @@
                                 <p dir="ltr">Nº</p>
                             </td>
                             <td style="text-align:center">
-                                <p dir="ltr">MATRÍCULA</p>
+                                <p dir="ltr">ELETIVA</p>
+                            </td>
+                            <td style="text-align:center">
+                                <p dir="ltr">PROFESSOR(A)</p>
+                            </td>
+                            <td style="text-align:center">
+                                <p dir="ltr">INSCRIÇÃO</p>
                             </td>
                    
                             </td>
@@ -79,7 +73,10 @@
                             <tr>
                             <td style="text-align:center"><?= $k ?></td>
                                 <td style="text-align:center"><?= $value->eletiva->titulo ?></td>
+                                <td style="text-align:center"><?= $value->eletiva->professor->nome?></td>
                                 <td style="text-align:center"><?= $value->created?></td>
+
+
 
 
                             </tr>
@@ -88,8 +85,28 @@
                 </table>
             </div>
         </section>
+        <footer class="rodape" style="text-align: center;">
+    <p><b>EEMTI - Escola de Ensino Médio Capelão Frei Orlando - <?php echo date("d/m/Y"); ?></b></p>
+    <p>Rua Paulino Barroso, 1289, Imaculada Conceição, Canindé - Ceará - CEP: 62700-000</p>
+    <p>Contato: (85) 3343-6814 / 99856-2141  <?= $this->Html->image('whatsapp (1).png') ?> / 99298-6948 <?= $this->Html->image('whatsapp (1).png') ?></p>
+
+</footer>
     </body>
 </html>
+
+<style>
+
+    footer.rodape {
+      width: 100%;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      height: 80px;
+      display: flex;
+      
+    }
+
+</style>
 
 <?php
     $html = ob_get_contents();
