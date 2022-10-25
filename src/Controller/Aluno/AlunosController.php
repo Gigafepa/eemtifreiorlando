@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Controller\Aluno;
 
 use App\Controller\Aluno\AppController;
 use Cake\ORM\TableRegistry;
-
 
 /**
  * Alunos Controller
@@ -16,9 +14,7 @@ use Cake\ORM\TableRegistry;
 class AlunosController extends AppController
 {
     private $listaDeVagas = [];
-
-    public function login()
-    {
+    public function login() {
         $this->viewBuilder()->layout('empty');
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
@@ -30,8 +26,7 @@ class AlunosController extends AppController
         }
     }
 
-    function logout()
-    {
+    function logout() {
         $this->Flash->success('Você está deslogado agora!');
         return $this->redirect($this->Auth->logout());
     }
@@ -60,7 +55,7 @@ class AlunosController extends AppController
             ];
         });
 
-        if ($this->request->is(['post'])) {
+         if ($this->request->is(['post'])) {
             $dataSource = isset($this->request->data['pesquisa_data']) ? $this->request->data['pesquisa_data'] : null;
             $diaSelecionado = $this->request->data['data_eletiva'];
             $queryAux = $inscricoes->find()->innerJoinWith('Eletivas');
@@ -69,9 +64,9 @@ class AlunosController extends AppController
             })->toArray();
             $query = $eletivas->find()->where(function ($exp) use ($notMatch, $dataSource) {
                 if (!empty($notMatch)) {
-                    return $exp->eq('Eletivas.status', 'Aberto')->notIn('Eletivas.id', $notMatch)->eq('Eletivas.data_eletiva', new \DateTime($dataSource));
+                    return $exp->eq('Eletivas.status', 'Aberto')->notIn('Eletivas.id', $notMatch)->eq('Eletivas.dia_da_semana', $dataSource);
                 } else {
-                    return $exp->eq('Eletivas.status', 'Aberto')->eq('Eletivas.data_eletiva', new \DateTime($dataSource));
+                    return $exp->eq('Eletivas.status', 'Aberto')->eq('Eletivas.dia_da_semana', $dataSource);
                 }
             });
             $listaDeVagas = $this->listaDeVagas;
@@ -79,26 +74,28 @@ class AlunosController extends AppController
             $this->set(compact('dados', 'diaSelecionado', 'dataSource', 'listaDeVagas'));
         }
     }
-
-    public function inscrever($id = null)
-    {
+    
+    public function inscrever($id = null) {
         $inscricoes = TableRegistry::getTableLocator()->get('Inscricoes');
         $eletivas = TableRegistry::getTableLocator()->get('Eletivas');
         $vagasOcupadas = $inscricoes->find()->where(['eletiva_id' => $id])->count();
         $eletiva = $eletivas->get($id);
-
-        if ($vagasOcupadas >= $eletiva->vagas) {
+        if($vagasOcupadas >= $eletiva->vagas) {
             $this->Flash->error(__('Todas as vagas foram preenchidas!'));
         } else {
             $sameDay = $inscricoes->find()->contain('Eletivas')->innerJoinWith('Eletivas')->where(['Eletivas.data_eletiva' => $eletiva->data_eletiva, 'Inscricoes.aluno_id' => $this->Auth->user('id')])->count();
-            if ($sameDay > 0) {
+            if($sameDay > 0) {
                 $this->Flash->error('Você já se inscreveu em uma eletiva referente a esse dia.');
             } else {
                 $novaInscricao = $inscricoes->newEntity();
                 $novaInscricao->aluno_id = $this->Auth->user('id');
                 $novaInscricao->eletiva_id = $id;
-                if ($inscricoes->save($novaInscricao)) {
+                var_dump($eletiva->data_eletiva );
+                exit();
+                $novaInscricao->dia_da_semana = $eletiva->data_eletiva;
+                if($inscricoes->save($novaInscricao)) {
                     $this->Flash->success(__('Inscrição realizada com sucesso!'));
+                    
                 } else {
                     $this->Flash->error(__('Inscrição não foi efetuada!'));
                 }
@@ -107,8 +104,7 @@ class AlunosController extends AppController
         return $this->redirect(['action' => 'inscritos']);
     }
 
-    public function inscritos($id = null)
-    {
+    public function inscritos($id = null) {
         $id = $this->Auth->user('id');
         $inscricoesTable = TableRegistry::getTableLocator()->get('Inscricoes');
         $eletivas = $inscricoesTable->find()->contain(['Eletivas.Professores'])->where([
@@ -123,12 +119,11 @@ class AlunosController extends AppController
         $this->set('aluno', $aluno);
     }
 
-    public function cancelar($id = null)
-    {
+    public function cancelar($id = null) {
         $inscricoesTable = TableRegistry::getTableLocator()->get('Inscricoes');
         $this->request->allowMethod(['post', 'delete']);
         $inscricao = $inscricoesTable->get($id);
-        if ($inscricoesTable->delete($inscricao)) {
+        if($inscricoesTable->delete($inscricao)) {
             $this->Flash->success(__('A inscrição na eletiva foi cancelada!'));
         } else {
             $this->Flash->error(__('A inscrição na eletiva não pode ser cancelada!'));
@@ -213,13 +208,14 @@ class AlunosController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
-    public function viewTur($id = null)
-    {
-
+    public function viewTur($id = null){
+        
         $turma = $this->Turmas->get($id, [
             'contain' => ['Alunos']
         ]);
 
         $this->set('turma', $turma);
     }
+        
+ 
 }
